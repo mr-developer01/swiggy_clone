@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import ResCard from "./ResCard";
 import Shimmer from "./Shimmer";
 
@@ -10,6 +11,7 @@ const Body = () => {
 
   const [trueVal, setTrueVal] = useState(true);
   const [ratedCard, setRatedCard] = useState("Get 4 star above cards");
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     fetchApi();
@@ -53,12 +55,32 @@ const Body = () => {
           <h1 className="body-heading">
             Restaurants with online food delivery in Bangalore
           </h1>
+          <div className="search">
+            <input
+              className="search-box"
+              placeholder="Search Restro By Name"
+              type="text"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+            <button className="search-btn" onClick={() => {
+              const seachRes = cardData.filter((data) => {
+                return data.info.name.toLowerCase().includes(searchText.toLowerCase());
+              })
+              setJsonData(seachRes);
+            }}>
+              Search
+            </button>
+          </div>
           <button
             className="filter-btn"
             onClick={() => {
               const filterData = jsonData.filter((data) => {
                 return data.info.avgRating > 4.4;
               });
+              ratedCard === "Get 4 star above cards"
+                ? setRatedCard("Get all cards")
+                : setRatedCard("Get 4 star above cards");
               setTrueVal((prev) => !prev);
               if (trueVal) {
                 setJsonData(filterData);
@@ -67,15 +89,13 @@ const Body = () => {
               }
             }}
           >
-            {ratedCard === "Get 4 star above cards"
-              ? "Get all cards"
-              : "Get 4 star above cards"}
+            {ratedCard}
           </button>
         </div>
         <div className="wrapper">
           {jsonData.map((resData) => (
+            <Link key={resData.info.id} to={"/restaurants/"+resData.info.id}>
             <ResCard
-              key={resData.info.id}
               name={resData.info.name}
               rating={resData.info.avgRating}
               cuisines={resData.info.cuisines}
@@ -84,6 +104,7 @@ const Body = () => {
               aggregatedDiscountInfoV3={resData.info.aggregatedDiscountInfoV3}
               costForTwo={resData.info.costForTwo}
             />
+            </Link>
           ))}
         </div>
       </div>

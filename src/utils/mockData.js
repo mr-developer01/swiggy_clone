@@ -3872,4 +3872,6 @@ const cards = [
     },
   ];
 
+export const menu = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=12.9122238&lng=77.5923219&restaurantId=393840&catalog_qa=undefined&submitAction=ENTER"
+
 export default cards;
