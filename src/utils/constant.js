@@ -3925,6 +3925,11 @@ const data = [
 ];
 export const CDN_URL = "https://media-assets.swiggy.com/";
 export const LOGO_URL = "https://cdn3d.iconscout.com/3d/free/thumb/free-swiggy-5645894-4695752.png";
+
+export const MENU_API1 = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=12.9122238&lng=77.5923219&restaurantId=";
+// 393840
+export const MENU_API2 = "&catalog_qa=undefined&submitAction=ENTER";
+
 const cards = [
   {
     relevance: {},
