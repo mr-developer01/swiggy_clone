@@ -7,11 +7,17 @@ const ResMenu = () => {
   const { resId } = useParams();
   console.log(resId);
   const [veg, setVeg] = useState(true);
+
+  const [vegRes, setVegRes] = useState([]);
+  const [noneVegRes, setNoneVegRes] = useState([]);
+
   const [menu, setMenu] = useState([]);
   const cardInfo = menu[2]?.card?.card?.info
   const topcuisines = menu[2]?.card?.card?.info?.cuisines.join(" , ")
-  
+
   console.log(menu);
+  console.log(vegRes);
+  console.log(noneVegRes);
 
   useEffect(() => {
     fetchApi();
@@ -22,7 +28,16 @@ const ResMenu = () => {
     const data = await fetch(MENU_API1 + resId + MENU_API2);
     const json = await data.json();
     setMenu(json?.data?.cards);
-    // console.log(json);
+    const allVegNonVeg  = json?.data?.cards[5]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card?.itemCards;
+    // console.log(allVegNonVeg);
+    const vegData = allVegNonVeg.filter((data) => {
+      return data?.card?.info?.isVeg != null;
+    })
+    setVegRes(vegData)
+    const nonVegData = allVegNonVeg.filter((data) => {
+      return data?.card?.info?.isVeg == null;
+    })
+    setNoneVegRes(nonVegData);
   };
   
   return (
