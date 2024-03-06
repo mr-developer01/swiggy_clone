@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useOnlineStatus } from "../utils/useOnlineStatus";
 import ResCard from "./ResCard";
 import Shimmer from "./Shimmer";
 
@@ -7,31 +8,39 @@ const Body = () => {
   const [jsonData, setJsonData] = useState([]);
   const [cardData, setcardData] = useState([]);
 
-  console.log(jsonData);
+  console.log(cardData, "card Data");
+  console.log(jsonData, "json Data");
 
   const [trueVal, setTrueVal] = useState(true);
   const [ratedCard, setRatedCard] = useState("Get 4 star above cards");
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    fetchApi();
+    fetchApi()
   }, []);
 
   const fetchApi = async () => {
     const data = await fetch(
-      "https://www.swiggy.com/mapi/homepage/getCards?lat=12.9122238&lng=77.5923219"
+      "https://www.swiggy.com/mapi/homepage/getCards?lat=12.9715987&lng=77.5945627"
     );
     const json = await data.json();
+      console.log(json);
     // Optional Chaining:--
-    setJsonData([
-      ...json?.data?.success?.cards[4]?.gridWidget?.gridElements?.infoWithStyle
-        ?.restaurants,
-    ]);
-    setcardData([
-      ...json?.data?.success?.cards[4]?.gridWidget?.gridElements?.infoWithStyle
-        ?.restaurants,
-    ]);
+    setJsonData(
+      json?.data?.success?.cards[4]?.gridWidget?.gridElements?.infoWithStyle
+        ?.restaurants
+    );
+    setcardData(
+      json?.data?.success?.cards[4]?.gridWidget?.gridElements?.infoWithStyle
+        ?.restaurants
+    );
   };
+
+  const getInternetStatus = useOnlineStatus()
+
+  if (getInternetStatus === false){
+    return <h1 className="online-status">Hey, It looks like you are offline!!</h1>
+  }
 
   return jsonData.length === 0 ? (
     <div className="loader">

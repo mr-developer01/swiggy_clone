@@ -1,66 +1,63 @@
-import React, {useState, useEffect} from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-
-import { MENU_API1, MENU_API2 } from "../utils/constant";
+import { useFetchApi } from "../utils/useFetchApi";
 
 const ResMenu = () => {
   const { resId } = useParams();
-  console.log(resId);
   const [veg, setVeg] = useState(true);
 
-  const [vegRes, setVegRes] = useState([]);
-  const [noneVegRes, setNoneVegRes] = useState([]);
+  const resData = useFetchApi(resId);
 
-  const [menu, setMenu] = useState([]);
-  const cardInfo = menu[2]?.card?.card?.info
-  const topcuisines = menu[2]?.card?.card?.info?.cuisines.join(" , ")
+  console.log(resData);
 
-  console.log(menu);
-  console.log(vegRes);
-  console.log(noneVegRes);
+  if (resData.length === 0) {
+    return <h1 style={{ marginTop: "10vh" }}>Loading Data....</h1>;
+  }
 
-  useEffect(() => {
-    fetchApi();
-  }, [])
-  
+  const {
+    name,
+    city,
+    areaName,
+    avgRating,
+    cuisines,
+    totalRatingsString,
+    sla,
+    feeDetails,
+    costForTwoMessage
+  } = resData[2]?.card?.card?.info;
+  const { lastMileTravelString, slaString } = sla;
+  const { message } = feeDetails;
+  console.log(name, city);
 
-  const fetchApi = async () => {
-    const data = await fetch(MENU_API1 + resId + MENU_API2);
-    const json = await data.json();
-    setMenu(json?.data?.cards);
-    const allVegNonVeg  = json?.data?.cards[5]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card?.itemCards;
-    // console.log(allVegNonVeg);
-    const vegData = allVegNonVeg.filter((data) => {
-      return data?.card?.info?.isVeg != null;
-    })
-    setVegRes(vegData)
-    const nonVegData = allVegNonVeg.filter((data) => {
-      return data?.card?.info?.isVeg == null;
-    })
-    setNoneVegRes(nonVegData);
-  };
-  
   return (
     <div className="menu">
       <div className="menu-cnt-1">
-        <p className="menu-1">Home / {cardInfo?.city} / {cardInfo?.name}</p>
+        <p className="menu-1">
+          Home / {city} / {name}
+        </p>
         <div className="menu-2">
           <div className="lft">
-            <h3>{cardInfo?.name}</h3>
-            <p>{topcuisines}</p>
-            <p>{cardInfo?.areaName} {cardInfo?.sla?.lastMileTravelString} ▾</p>
-            <p>{cardInfo?.feeDetails?.message}</p>
+            <h3>{name}</h3>
+            <p>{cuisines.join(" , ")}</p>
+            <p>
+              {areaName} {lastMileTravelString} ▾
+            </p>
+            <p>{message}</p>
           </div>
           <div className="rght">
-            <div className="stars"><h4>{cardInfo?.avgRatingString}</h4></div>
-            <div className="stars"><p>{cardInfo?.totalRatingsString}</p></div>
+            <div className="stars">
+              <h4>{avgRating}</h4>
+            </div>
+            <div className="stars">
+              <p>{totalRatingsString}</p>
+            </div>
           </div>
         </div>
       </div>
       <div className="menu-cnt-2">
         <div className="menu-2-p1">
-          <h4>{cardInfo?.sla?.slaString}</h4>
-          <h4>{cardInfo?.costForTwoMessage}</h4>
+          <h4>{slaString}</h4>
+          <h4>{costForTwoMessage}</h4>
         </div>
         <div className="menu-2-p2">
           <div className="box">
@@ -91,15 +88,19 @@ const ResMenu = () => {
       </div>
       <div className="menu-cnt-3">
         <div className="p-1">
-          <span><h4>Veg Only</h4></span>
+          <span>
+            <h4>Veg Only</h4>
+          </span>
           <label className="switch">
-            <input type="checkbox" onClick={() => {
-              setVeg((prev) => !prev)
-              console.log(veg)
-            }}/>
+            <input
+              type="checkbox"
+              onClick={() => {
+                setVeg((prev) => !prev);
+                console.log(veg);
+              }}
+            />
             <span className="slider"></span>
           </label>
-
         </div>
         <div className="p-2">
           <h3>Top Picks</h3>
@@ -107,11 +108,15 @@ const ResMenu = () => {
         </div>
         <div className="p-3">
           <div className="types">
-            <div className="type-heading"><h3>Personal Slice Veg Pizza. (27)</h3></div>
+            <div className="type-heading">
+              <h3>Personal Slice Veg Pizza. (27)</h3>
+            </div>
             <div className="foods"></div>
           </div>
           <div className={veg ? "types" : "non-types"}>
-            <div className="type-heading"><h3>Personal Slice Non Veg Pizza. (24)</h3></div>
+            <div className="type-heading">
+              <h3>Slice Non Veg Pizza. (24)</h3>
+            </div>
             <div className="foods"></div>
           </div>
         </div>
