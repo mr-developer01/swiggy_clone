@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   padding: 0;
   margin: 0;
@@ -134,7 +138,7 @@ a {
 
 .body {
   width: 100%;
-  margin-top: 10vh;
+  margin-top: 15vh;
   padding: 1vh 0;
   /* background-color: red; */
 }
@@ -463,8 +467,8 @@ input:checked + .slider:before {
 
 .types .foods{
     width: 100%;
-    height: 30vh;
-    background-color: red;
+    /* min-height: 30vh; */
+    /* background-color: red; */
 }
 
 .non-types{

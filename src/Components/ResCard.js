@@ -8,7 +8,7 @@ const ResCard = ({
   cloudinaryImageId,
   areaName,
   aggregatedDiscountInfoV3,
-  costForTwo
+  costForTwo,
 }) => {
   return (
     <div className="res-card">
@@ -33,6 +33,19 @@ const ResCard = ({
       </div>
     </div>
   );
+};
+
+
+// HOC(Higher Order Components) :--
+export const promotedRes = (ResCard) => {
+  return (props) => {
+    return (
+      <div>
+        <label className="absolute bg-black text-white z-10 p-2 shadow-xl rounded-xl">Promoted!</label>
+        <ResCard {...props}/>
+      </div>
+    );
+  };
 };
 
 export default ResCard;

@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useOnlineStatus } from "../utils/useOnlineStatus";
-import ResCard from "./ResCard";
+import ResCard, { promotedRes } from "./ResCard";
 import Shimmer from "./Shimmer";
 
 const Body = () => {
   const [jsonData, setJsonData] = useState([]);
   const [cardData, setcardData] = useState([]);
 
-  console.log(cardData, "card Data");
-  console.log(jsonData, "json Data");
+  // console.log(jsonData, "card Data");
 
   const [trueVal, setTrueVal] = useState(true);
   const [ratedCard, setRatedCard] = useState("Get 4 star above cards");
   const [searchText, setSearchText] = useState("");
 
+  const ResPromoedCard = promotedRes(ResCard);
+
   useEffect(() => {
-    fetchApi()
+    fetchApi();
   }, []);
 
   const fetchApi = async () => {
@@ -24,7 +25,7 @@ const Body = () => {
       "https://www.swiggy.com/mapi/homepage/getCards?lat=12.9715987&lng=77.5945627"
     );
     const json = await data.json();
-      console.log(json);
+    console.log(json);
     // Optional Chaining:--
     setJsonData(
       json?.data?.success?.cards[4]?.gridWidget?.gridElements?.infoWithStyle
@@ -36,10 +37,12 @@ const Body = () => {
     );
   };
 
-  const getInternetStatus = useOnlineStatus()
+  const getInternetStatus = useOnlineStatus();
 
-  if (getInternetStatus === false){
-    return <h1 className="online-status">Hey, It looks like you are offline!!</h1>
+  if (getInternetStatus === false) {
+    return (
+      <h1 className="online-status">Hey, It looks like you are offline!!</h1>
+    );
   }
 
   return jsonData.length === 0 ? (
@@ -72,12 +75,17 @@ const Body = () => {
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
-            <button className="search-btn" onClick={() => {
-              const seachRes = cardData.filter((data) => {
-                return data.info.name.toLowerCase().includes(searchText.toLowerCase());
-              })
-              setJsonData(seachRes);
-            }}>
+            <button
+              className="search-btn"
+              onClick={() => {
+                const seachRes = cardData.filter((data) => {
+                  return data.info.name
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase());
+                });
+                setJsonData(seachRes);
+              }}
+            >
               Search
             </button>
           </div>
@@ -103,16 +111,32 @@ const Body = () => {
         </div>
         <div className="wrapper">
           {jsonData.map((resData) => (
-            <Link key={resData.info.id} to={"/restaurants/"+resData.info.id}>
-            <ResCard
-              name={resData.info.name}
-              rating={resData.info.avgRating}
-              cuisines={resData.info.cuisines}
-              cloudinaryImageId={resData.info.cloudinaryImageId}
-              areaName={resData.info.areaName}
-              aggregatedDiscountInfoV3={resData.info.aggregatedDiscountInfoV3}
-              costForTwo={resData.info.costForTwo}
-            />
+            <Link key={resData.info.id} to={"/restaurants/" + resData.info.id}>
+              {resData.info.promoted ? (
+                <ResPromoedCard
+                  name={resData.info.name}
+                  rating={resData.info.avgRating}
+                  cuisines={resData.info.cuisines}
+                  cloudinaryImageId={resData.info.cloudinaryImageId}
+                  areaName={resData.info.areaName}
+                  aggregatedDiscountInfoV3={
+                    resData.info.aggregatedDiscountInfoV3
+                  }
+                  costForTwo={resData.info.costForTwo}
+                />
+              ) : (
+                <ResCard
+                  name={resData.info.name}
+                  rating={resData.info.avgRating}
+                  cuisines={resData.info.cuisines}
+                  cloudinaryImageId={resData.info.cloudinaryImageId}
+                  areaName={resData.info.areaName}
+                  aggregatedDiscountInfoV3={
+                    resData.info.aggregatedDiscountInfoV3
+                  }
+                  costForTwo={resData.info.costForTwo}
+                />
+              )}
             </Link>
           ))}
         </div>
