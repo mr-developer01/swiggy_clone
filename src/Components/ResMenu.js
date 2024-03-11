@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { addItems } from "../utils/cartSlice";
 import { CDN_URL } from "../utils/Constant";
 import {
   useAllMenuCards,
@@ -17,6 +19,8 @@ const ResMenu = () => {
   const resData = useFetchApi(resId);
 
   console.log(resData);
+
+  const dispatch = useDispatch();
 
   if (resData.length === 0) {
     return <h1 style={{ marginTop: "10vh" }}>Loading Data....</h1>;
@@ -127,15 +131,18 @@ const ResMenu = () => {
             </div>
             <div className={hideveg ? "foods" : "non-types"}>
               {vegRes.map((data) => (
-                <div key={data.card.info.id} className="w-full h-56 border-b border-black flex justify-between items-center">
+                <div
+                  key={data.card.info.id}
+                  className="w-full h-56 border-b border-black flex justify-between items-center"
+                >
                   <div className="w-[70%] bg-white">
                     <p className="text-sm font-bold text-orange-500">
                       {data.card.info.category}
                     </p>
-                    <h3 className="text-lg font-bold">
-                      {data.card.info.name}
-                    </h3>
-                    <h5 className="text-base font-semibold">RS.{data.card.info.price / 100}</h5>
+                    <h3 className="text-lg font-bold">{data.card.info.name}</h3>
+                    <h5 className="text-base font-semibold">
+                      RS.{data.card.info.price / 100}
+                    </h5>
                     <p className="text-base mt-4">
                       {data.card.info.description}
                     </p>
@@ -146,7 +153,12 @@ const ResMenu = () => {
                       src={CDN_URL + data.card.info.imageId}
                       alt="koi img"
                     />
-                    <button className=" bg-red-400 -mt-6 w-[80%] py-2 rounded-md text-white cursor-pointer">
+                    <button
+                      className=" bg-red-400 -mt-6 w-[80%] py-2 rounded-md text-white cursor-pointer"
+                      onClick={() => {
+                        dispatch(addItems(data));
+                      }}
+                    >
                       Add To Cart
                     </button>
                   </div>
@@ -170,30 +182,38 @@ const ResMenu = () => {
             </div>
             <div className={hidenonveg ? "foods" : "non-types"}>
               {nonVegRes.map((data) => (
-                <div className="w-full h-56 border-b border-black flex justify-between items-center">
-                <div className="w-[70%] bg-white">
-                  <p className="text-sm text-orange-500 font-bold">
-                    {data.card.info.category}
-                  </p>
-                  <h3 className="text-lg font-bold">
-                  {data.card.info.name}
-                  </h3>
-                  <h5 className="text-base font-semibold">RS.{data.card.info.price / 100}</h5>
-                  <p className="text-base mt-4">
-                  {data.card.info.description}
-                  </p>
+                <div
+                  key={data.card.info.id}
+                  className="w-full h-56 border-b border-black flex justify-between items-center"
+                >
+                  <div className="w-[70%] bg-white">
+                    <p className="text-sm text-orange-500 font-bold">
+                      {data.card.info.category}
+                    </p>
+                    <h3 className="text-lg font-bold">{data.card.info.name}</h3>
+                    <h5 className="text-base font-semibold">
+                      RS.{data.card.info.price / 100}
+                    </h5>
+                    <p className="text-base mt-4">
+                      {data.card.info.description}
+                    </p>
+                  </div>
+                  <div className="w-[18%] h-[70%] bg-white rounded-md flex flex-col items-center">
+                    <img
+                      className="w-full h-full rounded-md"
+                      src={CDN_URL + data.card.info.imageId}
+                      alt="koi img"
+                    />
+                    <button
+                      className=" bg-red-400 -mt-6 w-[80%] py-2 rounded-md text-white cursor-pointer"
+                      onClick={() => {
+                        dispatch(addItems(data));
+                      }}
+                    >
+                      Add To Cart
+                    </button>
+                  </div>
                 </div>
-                <div className="w-[18%] h-[70%] bg-white rounded-md flex flex-col items-center">
-                  <img
-                    className="w-full h-full rounded-md"
-                    src={CDN_URL + data.card.info.imageId}
-                    alt="koi img"
-                  />
-                  <button className=" bg-red-400 -mt-6 w-[80%] py-2 rounded-md text-white cursor-pointer">
-                    Add To Cart
-                  </button>
-                </div>
-              </div>
               ))}
             </div>
           </div>
