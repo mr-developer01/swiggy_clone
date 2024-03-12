@@ -1,5 +1,6 @@
 import React from 'react'
 import { LOGO_URL } from '../utils/Constant';
+import logo from "../../public/f_img.png";
 
 import {Link} from "react-router-dom";
 import { useSelector } from 'react-redux';
@@ -11,7 +12,7 @@ const Nav = () => {
   return (
     <div className="nav">
         <div className="left">
-        <Link to="/"><img src={LOGO_URL} alt="logo" /></Link>
+        <Link to="/"><img src={logo} alt="logo" /></Link>
         <div className="adrs">
         <p><span>Other</span> 3rd Phase, J.P.Nagar, Bengaluru, Karnatka</p>
         <p>▼</p>
